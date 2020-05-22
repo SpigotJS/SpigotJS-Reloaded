@@ -12,6 +12,9 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import org.bukkit.Bukkit;
+import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.Plugin;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -20,6 +23,10 @@ import com.coveo.nashorn_modules.Require;
 import com.google.gson.JsonElement;
 
 import io.github.spigotjs.SpigotJSReloaded;
+import io.github.spigotjs.managers.ConfigManager;
+import io.github.spigotjs.managers.EventManager;
+import io.github.spigotjs.managers.FileManager;
+import io.github.spigotjs.managers.TaskManager;
 import jdk.internal.dynalink.beans.StaticClass;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import lombok.Getter;
@@ -31,12 +38,21 @@ public class ScriptManager {
 	private List<ScriptResource> scriptResources;
 	private File scriptDirectory;
 	private ScriptContext engineContext;
+	
+	private EventManager eventManager;
+	private ConfigManager configManager;
+	private FileManager fileManager;
+	private TaskManager taskManager;
 
 	public ScriptManager() {
 		scriptResources = new ArrayList<ScriptResource>();
 		scriptDirectory = new File("scripts/");
 		scriptDirectory.mkdir();
 		System.setProperty("nashorn.args", "--language=es6");
+		eventManager = new EventManager(SpigotJSReloaded.getInstance());
+		configManager = new ConfigManager();
+		fileManager = new FileManager();
+		taskManager = new TaskManager();
 		loadRuntime();
 	}
 
@@ -53,7 +69,13 @@ public class ScriptManager {
 			for (Entry<String, JsonElement> entry : SpigotJSReloaded.getInstance().getPreDeclared().entrySet()) {
 				bindings.put(entry.getKey(), StaticClass.forClass(Class.forName(entry.getValue().getAsString())));
 			}
-
+			bindings.put("PluginLogger", SpigotJSReloaded.getInstance().getLogger());
+			//bindings.put("CommandManager", commandManager);
+			bindings.put("EventManager", eventManager);
+			bindings.put("ConfigManager", configManager);
+			bindings.put("FileManager", fileManager);
+			bindings.put("TaskManager", taskManager);
+			bindings.put("__Plugin", SpigotJSReloaded.getInstance());
 			context.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
 			engineContext = context;
 		} catch (Exception ex) {
@@ -62,6 +84,8 @@ public class ScriptManager {
 	}
 
 	public void loadScripts() {
+		HandlerList.unregisterAll((Plugin) SpigotJSReloaded.getInstance());
+		Bukkit.getScheduler().cancelTasks(SpigotJSReloaded.getInstance());
 		for (File file : scriptDirectory.listFiles()) {
 			if (!file.isDirectory()) {
 				SpigotJSReloaded.getInstance().getLogger()

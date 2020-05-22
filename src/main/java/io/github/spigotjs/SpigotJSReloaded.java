@@ -9,6 +9,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import io.github.spigotjs.managers.ConfigManager;
+import io.github.spigotjs.managers.EventManager;
+import io.github.spigotjs.managers.FileManager;
+import io.github.spigotjs.managers.TaskManager;
 import io.github.spigotjs.script.ScriptManager;
 import lombok.Getter;
 
@@ -20,6 +24,11 @@ public class SpigotJSReloaded extends JavaPlugin {
 	
 	private JsonObject preDeclared;
 	private ScriptManager scriptManager;
+	
+	private EventManager eventManager;
+	private ConfigManager configManager;
+	private FileManager fileManager;
+	private TaskManager taskManager;
 	
 	@Override
 	public void onLoad() {
