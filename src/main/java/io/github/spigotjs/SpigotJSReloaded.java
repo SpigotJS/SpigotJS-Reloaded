@@ -25,14 +25,11 @@ public class SpigotJSReloaded extends JavaPlugin {
 	private JsonObject preDeclared;
 	private ScriptManager scriptManager;
 	
-	private EventManager eventManager;
-	private ConfigManager configManager;
-	private FileManager fileManager;
-	private TaskManager taskManager;
 	
 	@Override
 	public void onLoad() {
 		try {
+			// Test
 			instance = this;
 			getDataFolder().mkdir();
 			File predeclaredFile = new File("plugins/SpigotJS-Reloaded/predeclared.json");
