@@ -43,11 +43,15 @@ public class SpigotJSReloaded extends JavaPlugin {
 			} else {
 				preDeclared = new JsonParser().parse(new String(java.nio.file.Files.readAllBytes(predeclaredFile.toPath()))).getAsJsonObject();
 			}
-			scriptManager = new ScriptManager();
-			scriptManager.loadScripts();
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void onEnable() {
+		scriptManager = new ScriptManager();
+		scriptManager.loadScripts();
 	}
 	
 	@Override
