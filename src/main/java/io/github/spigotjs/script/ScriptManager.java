@@ -120,6 +120,7 @@ public class ScriptManager {
 	
 	public void loadScripts() {
 		loadRuntime();
+		// Test
 		for (ScriptBukkitCommand cmd : scriptBukkitCommands) {
 			unRegisterCommand(cmd.getName());
 		}
