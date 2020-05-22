@@ -1,8 +1,10 @@
 package io.github.spigotjs.script;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -13,6 +15,9 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.json.simple.JSONObject;
@@ -23,10 +28,12 @@ import com.coveo.nashorn_modules.Require;
 import com.google.gson.JsonElement;
 
 import io.github.spigotjs.SpigotJSReloaded;
+import io.github.spigotjs.managers.CommandManager;
 import io.github.spigotjs.managers.ConfigManager;
 import io.github.spigotjs.managers.EventManager;
 import io.github.spigotjs.managers.FileManager;
 import io.github.spigotjs.managers.TaskManager;
+import io.github.spigotjs.utils.ScriptBukkitCommand;
 import jdk.internal.dynalink.beans.StaticClass;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import lombok.Getter;
@@ -39,6 +46,12 @@ public class ScriptManager {
 	private File scriptDirectory;
 	private ScriptContext engineContext;
 	
+	private List<ScriptBukkitCommand> scriptBukkitCommands;
+	
+	private Field bukkitCommandMap;
+	private CommandMap commandMap;
+	
+	private CommandManager commandManager;
 	private EventManager eventManager;
 	private ConfigManager configManager;
 	private FileManager fileManager;
@@ -48,16 +61,22 @@ public class ScriptManager {
 		scriptResources = new ArrayList<ScriptResource>();
 		scriptDirectory = new File("scripts/");
 		scriptDirectory.mkdir();
+		scriptBukkitCommands = new ArrayList<ScriptBukkitCommand>();
 		System.setProperty("nashorn.args", "--language=es6");
 		eventManager = new EventManager(SpigotJSReloaded.getInstance());
 		configManager = new ConfigManager();
 		fileManager = new FileManager();
+		commandManager = new CommandManager();
 		taskManager = new TaskManager();
 		loadRuntime();
 	}
 
 	public void loadRuntime() {
 		try {
+			bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+			bukkitCommandMap.setAccessible(true);
+			commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
+			
 			engine = null;
 			ScriptEngineManager manager = new ScriptEngineManager(null);
 			engine = (NashornScriptEngine) manager.getEngineByName("JavaScript");
@@ -70,7 +89,7 @@ public class ScriptManager {
 				bindings.put(entry.getKey(), StaticClass.forClass(Class.forName(entry.getValue().getAsString())));
 			}
 			bindings.put("PluginLogger", SpigotJSReloaded.getInstance().getLogger());
-			//bindings.put("CommandManager", commandManager);
+			bindings.put("CommandManager", commandManager);
 			bindings.put("EventManager", eventManager);
 			bindings.put("ConfigManager", configManager);
 			bindings.put("FileManager", fileManager);
@@ -83,9 +102,27 @@ public class ScriptManager {
 		}
 	}
 
+	public void unRegisterCommand(String cmd) {
+		try {
+			BukkitCommand command = (BukkitCommand) commandMap.getCommand(cmd);
+			Field knownCommandsField = commandMap.getClass().getDeclaredField("knownCommands");
+			knownCommandsField.setAccessible(true);
+			@SuppressWarnings("unchecked")
+			HashMap<String, Command> knownCommands = (HashMap<String, Command>) knownCommandsField.get(commandMap);
+			knownCommands.remove(command.getName());
+			knownCommands.remove(cmd);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void loadScripts() {
+		for (ScriptBukkitCommand cmd : scriptBukkitCommands) {
+			unRegisterCommand(cmd.getName());
+		}
 		HandlerList.unregisterAll((Plugin) SpigotJSReloaded.getInstance());
 		Bukkit.getScheduler().cancelTasks(SpigotJSReloaded.getInstance());
+		scriptBukkitCommands.clear();
 		for (File file : scriptDirectory.listFiles()) {
 			if (!file.isDirectory()) {
 				SpigotJSReloaded.getInstance().getLogger()
