@@ -27,7 +27,6 @@ public class SpigotJSReloaded extends JavaPlugin {
 	@Override
 	public void onLoad() {
 		try {
-			// Test 2
 			instance = this;
 			getDataFolder().mkdir();
 			File predeclaredFile = new File("plugins/SpigotJS-Reloaded/predeclared.json");
