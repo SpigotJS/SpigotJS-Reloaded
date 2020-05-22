@@ -2,6 +2,8 @@ package io.github.spigotjs;
 
 import java.io.File;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.gson.Gson;
@@ -46,5 +48,15 @@ public class SpigotJSReloaded extends JavaPlugin {
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
+	}
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		if (sender.hasPermission("spigotjs.reload")) {
+			sender.sendMessage("§c§lNote: §cCommand reload should work now. Only testet in 1.8");
+			sender.sendMessage("§cReloading is not supported. Only use it for development.");
+			scriptManager.loadScripts();
+		}
+		return super.onCommand(sender, command, label, args);
 	}
 }
