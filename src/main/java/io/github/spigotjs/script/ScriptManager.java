@@ -28,6 +28,7 @@ import com.coveo.nashorn_modules.Require;
 import com.google.gson.JsonElement;
 
 import io.github.spigotjs.SpigotJSReloaded;
+import io.github.spigotjs.libraries.MySQL;
 import io.github.spigotjs.managers.CommandManager;
 import io.github.spigotjs.managers.ConfigManager;
 import io.github.spigotjs.managers.EventManager;
@@ -91,6 +92,7 @@ public class ScriptManager {
 			bindings.put("PluginLogger", SpigotJSReloaded.getInstance().getLogger());
 			bindings.put("CommandManager", commandManager);
 			bindings.put("EventManager", eventManager);
+			bindings.put("MySQL", StaticClass.forClass(MySQL.class));
 			bindings.put("ConfigManager", configManager);
 			bindings.put("FileManager", fileManager);
 			bindings.put("TaskManager", taskManager);
