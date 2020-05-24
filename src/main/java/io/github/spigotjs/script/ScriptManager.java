@@ -34,6 +34,7 @@ import io.github.spigotjs.managers.ConfigManager;
 import io.github.spigotjs.managers.EventManager;
 import io.github.spigotjs.managers.FileManager;
 import io.github.spigotjs.managers.TaskManager;
+import io.github.spigotjs.support.NodeConsole;
 import io.github.spigotjs.utils.ScriptBukkitCommand;
 import jdk.internal.dynalink.beans.StaticClass;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
@@ -57,6 +58,11 @@ public class ScriptManager {
 	private ConfigManager configManager;
 	private FileManager fileManager;
 	private TaskManager taskManager;
+	
+	/*
+	 * Node-Support
+	 */
+	private NodeConsole console;
 
 	public ScriptManager() {
 		scriptResources = new ArrayList<ScriptResource>();
@@ -69,6 +75,11 @@ public class ScriptManager {
 		fileManager = new FileManager();
 		commandManager = new CommandManager();
 		taskManager = new TaskManager();
+		
+		/*
+		 * Node-Support
+		 */
+		console = new NodeConsole();
 		loadRuntime();
 	}
 
@@ -96,6 +107,8 @@ public class ScriptManager {
 			bindings.put("ConfigManager", configManager);
 			bindings.put("FileManager", fileManager);
 			bindings.put("TaskManager", taskManager);
+			bindings.put("TaskManager", taskManager);
+			bindings.put("console", console);
 			bindings.put("__Plugin", SpigotJSReloaded.getInstance());
 			context.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
 			engineContext = context;
