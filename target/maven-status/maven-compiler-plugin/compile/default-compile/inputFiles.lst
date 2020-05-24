@@ -1,6 +1,8 @@
+C:\Users\elias\Desktop\Netzwerk (Entwicklung)\Eclipse\SpigotJS-Reloaded\src\main\java\io\github\spigotjs\commands\SpigotJSCommandBase.java
 C:\Users\elias\Desktop\Netzwerk (Entwicklung)\Eclipse\SpigotJS-Reloaded\src\main\java\io\github\spigotjs\libraries\MySQL.java
 C:\Users\elias\Desktop\Netzwerk (Entwicklung)\Eclipse\SpigotJS-Reloaded\src\main\java\io\github\spigotjs\utils\ScriptCommand.java
 C:\Users\elias\Desktop\Netzwerk (Entwicklung)\Eclipse\SpigotJS-Reloaded\src\main\java\io\github\spigotjs\SpigotJSReloaded.java
+C:\Users\elias\Desktop\Netzwerk (Entwicklung)\Eclipse\SpigotJS-Reloaded\src\main\java\io\github\spigotjs\script\addons\ScriptCodeAddon.java
 C:\Users\elias\Desktop\Netzwerk (Entwicklung)\Eclipse\SpigotJS-Reloaded\src\main\java\io\github\spigotjs\utils\Utils.java
 C:\Users\elias\Desktop\Netzwerk (Entwicklung)\Eclipse\SpigotJS-Reloaded\src\main\java\io\github\spigotjs\support\NodeConsole.java
 C:\Users\elias\Desktop\Netzwerk (Entwicklung)\Eclipse\SpigotJS-Reloaded\src\main\java\io\github\spigotjs\managers\ConfigManager.java
@@ -10,5 +12,7 @@ C:\Users\elias\Desktop\Netzwerk (Entwicklung)\Eclipse\SpigotJS-Reloaded\src\main
 C:\Users\elias\Desktop\Netzwerk (Entwicklung)\Eclipse\SpigotJS-Reloaded\src\main\java\io\github\spigotjs\script\ScriptManager.java
 C:\Users\elias\Desktop\Netzwerk (Entwicklung)\Eclipse\SpigotJS-Reloaded\src\main\java\io\github\spigotjs\utils\ScriptBukkitCommand.java
 C:\Users\elias\Desktop\Netzwerk (Entwicklung)\Eclipse\SpigotJS-Reloaded\src\main\java\io\github\spigotjs\script\ScriptFolder.java
+C:\Users\elias\Desktop\Netzwerk (Entwicklung)\Eclipse\SpigotJS-Reloaded\src\main\java\io\github\spigotjs\script\addons\ScriptDeclarationAddon.java
 C:\Users\elias\Desktop\Netzwerk (Entwicklung)\Eclipse\SpigotJS-Reloaded\src\main\java\io\github\spigotjs\managers\TaskManager.java
+C:\Users\elias\Desktop\Netzwerk (Entwicklung)\Eclipse\SpigotJS-Reloaded\src\main\java\io\github\spigotjs\script\addons\ScriptAddonManager.java
 C:\Users\elias\Desktop\Netzwerk (Entwicklung)\Eclipse\SpigotJS-Reloaded\src\main\java\io\github\spigotjs\managers\EventManager.java

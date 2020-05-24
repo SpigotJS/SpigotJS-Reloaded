@@ -1,17 +1,20 @@
 package io.github.spigotjs;
 
 import java.io.File;
+import java.util.Map.Entry;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import io.github.spigotjs.commands.SpigotJSCommandBase;
 import io.github.spigotjs.script.ScriptManager;
+import io.github.spigotjs.script.addons.ScriptAddonManager;
+import io.github.spigotjs.script.addons.ScriptDeclarationAddon;
 import lombok.Getter;
 
 @Getter
@@ -23,11 +26,18 @@ public class SpigotJSReloaded extends JavaPlugin {
 	private JsonObject preDeclared;
 	private ScriptManager scriptManager;
 	
+	private ScriptAddonManager scriptAddonManager;
+	
+	private long start;
+	
+	public static final String PREFIX = "Â§6Â§lSpigotÂ§eÂ§lJS Â§8âž¥ Â§7";
 	
 	@Override
 	public void onLoad() {
 		try {
+			start = System.currentTimeMillis();
 			instance = this;
+			scriptAddonManager = new ScriptAddonManager();
 			getDataFolder().mkdir();
 			File predeclaredFile = new File("plugins/SpigotJS-Reloaded/predeclared.json");
 			if(!predeclaredFile.exists()) {
@@ -42,6 +52,9 @@ public class SpigotJSReloaded extends JavaPlugin {
 			} else {
 				preDeclared = new JsonParser().parse(new String(java.nio.file.Files.readAllBytes(predeclaredFile.toPath()))).getAsJsonObject();
 			}
+			for (Entry<String, JsonElement> entry : preDeclared.entrySet()) {
+				scriptAddonManager.registerDeclarationAddon(new ScriptDeclarationAddon("PreDeclared-File", entry.getKey(), Class.forName(entry.getValue().getAsString())));
+			}
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -49,17 +62,12 @@ public class SpigotJSReloaded extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		getCommand("spigotjs").setExecutor(new SpigotJSCommandBase());
 		scriptManager = new ScriptManager();
 		scriptManager.loadScripts();
+		long ms = System.currentTimeMillis() - start;
+		getLogger().info("There are " + scriptAddonManager.getDeclarationAddons().size() + " declaration-addons and " + scriptAddonManager.getCodeAddons().size() + " code-addons registered.");
+		getLogger().info("Enabled SpigotJS in " + ms + "ms. Successfully loaded " + scriptManager.getScriptResources().size() + " scripts.");
 	}
 	
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (sender.hasPermission("spigotjs.reload")) {
-			sender.sendMessage("§c§lNote: §cCommand reload should work now. Only testet in 1.8");
-			sender.sendMessage("§cReloading is not supported. Only use it for development.");
-			scriptManager.loadScripts();
-		}
-		return super.onCommand(sender, command, label, args);
-	}
 }

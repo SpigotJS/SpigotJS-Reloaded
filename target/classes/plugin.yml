@@ -3,4 +3,4 @@ version: 2.0.3
 main: io.github.spigotjs.SpigotJSReloaded
 
 commands:
-  jsreload:
+  spigotjs:

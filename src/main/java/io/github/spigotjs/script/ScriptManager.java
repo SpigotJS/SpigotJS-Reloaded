@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 import javax.script.Bindings;
 import javax.script.CompiledScript;
@@ -25,7 +24,6 @@ import org.json.simple.parser.JSONParser;
 
 import com.coveo.nashorn_modules.FilesystemFolder;
 import com.coveo.nashorn_modules.Require;
-import com.google.gson.JsonElement;
 
 import io.github.spigotjs.SpigotJSReloaded;
 import io.github.spigotjs.libraries.MySQL;
@@ -34,6 +32,8 @@ import io.github.spigotjs.managers.ConfigManager;
 import io.github.spigotjs.managers.EventManager;
 import io.github.spigotjs.managers.FileManager;
 import io.github.spigotjs.managers.TaskManager;
+import io.github.spigotjs.script.addons.ScriptCodeAddon;
+import io.github.spigotjs.script.addons.ScriptDeclarationAddon;
 import io.github.spigotjs.support.NodeConsole;
 import io.github.spigotjs.utils.ScriptBukkitCommand;
 import jdk.internal.dynalink.beans.StaticClass;
@@ -64,6 +64,8 @@ public class ScriptManager {
 	 */
 	private NodeConsole console;
 
+	private String codeFromAddons;
+	
 	public ScriptManager() {
 		scriptResources = new ArrayList<ScriptResource>();
 		scriptDirectory = new File("scripts/");
@@ -80,7 +82,11 @@ public class ScriptManager {
 		 * Node-Support
 		 */
 		console = new NodeConsole();
-		loadRuntime();
+		
+		codeFromAddons = "";
+		for(ScriptCodeAddon code : SpigotJSReloaded.getInstance().getScriptAddonManager().getCodeAddons()) {
+			codeFromAddons += (code.getCode() + ";");
+		}
 	}
 
 	public void loadRuntime() {
@@ -96,8 +102,9 @@ public class ScriptManager {
 			ScriptContext context = engine.getContext();
 			Bindings bindings = engine.createBindings();
 
-			for (Entry<String, JsonElement> entry : SpigotJSReloaded.getInstance().getPreDeclared().entrySet()) {
-				bindings.put(entry.getKey(), StaticClass.forClass(Class.forName(entry.getValue().getAsString())));
+			for(ScriptDeclarationAddon declareAddon : SpigotJSReloaded.getInstance().getScriptAddonManager().getDeclarationAddons()) {
+				bindings.put(declareAddon.getClassName(), declareAddon.getClass());
+				//SpigotJSReloaded.getInstance().getLogger().info("Registered new declaration \"" + declareAddon.getClassName() + "\" for class \"" + declareAddon.getTargetClass().getName() + "\" by " + declareAddon.getSource());
 			}
 			bindings.put("PluginLogger", SpigotJSReloaded.getInstance().getLogger());
 			bindings.put("CommandManager", commandManager);
@@ -188,7 +195,7 @@ public class ScriptManager {
 
 	private void evalScript(String script) throws ScriptException {
 		Require.enable(engine, ScriptFolder.create(new File("./scripts/"), "UTF-8"));
-		CompiledScript compiledScript = engine.compile(script);
+		CompiledScript compiledScript = engine.compile(codeFromAddons + script);
 		compiledScript.eval(engineContext);
 	}
 
