@@ -1,15 +1,11 @@
 package io.github.spigotjs.script;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import org.apache.commons.io.IOUtils;
-
 import com.coveo.nashorn_modules.AbstractFolder;
-import com.coveo.nashorn_modules.FilesystemFolder;
 import com.coveo.nashorn_modules.Folder;
 
 public class ScriptFolder extends AbstractFolder {

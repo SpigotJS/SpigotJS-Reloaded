@@ -1,7 +1,6 @@
 package io.github.spigotjs.script;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.coveo.nashorn_modules.FilesystemFolder;
-import com.coveo.nashorn_modules.Folder;
 import com.coveo.nashorn_modules.Require;
 import com.google.gson.JsonElement;
 
