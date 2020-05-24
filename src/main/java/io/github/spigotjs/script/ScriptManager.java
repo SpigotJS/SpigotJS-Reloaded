@@ -1,6 +1,7 @@
 package io.github.spigotjs.script;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.coveo.nashorn_modules.FilesystemFolder;
+import com.coveo.nashorn_modules.Folder;
 import com.coveo.nashorn_modules.Require;
 import com.google.gson.JsonElement;
 
@@ -93,7 +95,6 @@ public class ScriptManager {
 			ScriptEngineManager manager = new ScriptEngineManager(null);
 			engine = (NashornScriptEngine) manager.getEngineByName("JavaScript");
 			Require.enable(engine, FilesystemFolder.create(scriptDirectory, "UTF-8"));
-
 			ScriptContext context = engine.getContext();
 			Bindings bindings = engine.createBindings();
 
@@ -143,9 +144,11 @@ public class ScriptManager {
 			if (!file.isDirectory()) {
 				SpigotJSReloaded.getInstance().getLogger()
 						.warning("There is a file in the \"scripts\" directory, that isnt a folder.");
-				return;
+				
+			} else {
+				loadResource(file);
 			}
-			loadResource(file);
+			
 		}
 	}
 
@@ -186,6 +189,7 @@ public class ScriptManager {
 	}
 
 	private void evalScript(String script) throws ScriptException {
+		Require.enable(engine, ScriptFolder.create(new File("./scripts/"), "UTF-8"));
 		CompiledScript compiledScript = engine.compile(script);
 		compiledScript.eval(engineContext);
 	}

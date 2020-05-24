@@ -12,7 +12,7 @@ public class NodeConsole {
 	public void log(Object obj) {
 		boolean isPrimitiveOrWrapped = obj.getClass().isPrimitive() || ClassUtils.wrapperToPrimitive(obj.getClass()) != null;
 		if(isPrimitiveOrWrapped) {
-			System.out.println(obj.toString());
+			System.out.println(obj);
 			return;
 		}
 		System.out.println(gson.toJson(obj));
