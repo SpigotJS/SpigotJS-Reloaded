@@ -131,7 +131,6 @@ public class ScriptManager {
 			@SuppressWarnings("unchecked")
 			HashMap<String, Command> knownCommands = (HashMap<String, Command>) knownCommandsField.get(commandMap);
 			knownCommands.remove(command.getName());
-			knownCommands.remove(cmd);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
