@@ -35,6 +35,7 @@ public class SpigotJSReloaded extends JavaPlugin {
 	@Override
 	public void onLoad() {
 		try {
+			Thread.currentThread().setContextClassLoader(getClassLoader());
 			start = System.currentTimeMillis();
 			instance = this;
 			scriptAddonManager = new ScriptAddonManager();
