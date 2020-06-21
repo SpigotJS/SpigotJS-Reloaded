@@ -14,6 +14,7 @@ import org.bukkit.plugin.Plugin;
 
 import com.google.common.reflect.ClassPath;
 
+import io.github.spigotjs.SpigotJSReloaded;
 import lombok.Getter;
 
 @Getter
@@ -43,7 +44,7 @@ public class EventManager implements Listener {
 		};
 		this.eventNames = new HashMap<String, Class>();
 		try {
-			ClassPath path = ClassPath.from(Thread.currentThread().getContextClassLoader());
+			ClassPath path = ClassPath.from(SpigotJSReloaded.getInstance().getLoader());
 			for(ClassPath.ClassInfo info : path.getTopLevelClasses()) {
 				for(String rawPackage : eventPackages) {
 					if(info.getName().startsWith(rawPackage)) {

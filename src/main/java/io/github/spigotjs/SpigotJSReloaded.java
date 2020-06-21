@@ -60,6 +60,10 @@ public class SpigotJSReloaded extends JavaPlugin {
 		}
 	}
 	
+	public ClassLoader getLoader() {
+		return getClassLoader();
+	}
+	
 	@Override
 	public void onEnable() {
 		getCommand("spigotjs").setExecutor(new SpigotJSCommandBase());
