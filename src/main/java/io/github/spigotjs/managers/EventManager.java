@@ -44,7 +44,7 @@ public class EventManager implements Listener {
 		};
 		this.eventNames = new HashMap<String, Class>();
 		try {
-			ClassPath path = ClassPath.from(SpigotJSReloaded.getInstance().getLoader());
+			ClassPath path = ClassPath.from(Thread.currentThread().getContextClassLoader());
 			for(ClassPath.ClassInfo info : path.getTopLevelClasses()) {
 				for(String rawPackage : eventPackages) {
 					if(info.getName().startsWith(rawPackage)) {

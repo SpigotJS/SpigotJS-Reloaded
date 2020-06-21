@@ -39,7 +39,6 @@
 							<exclude>org.projectlombok:*</exclude>
 						</excludes>
 					</artifactSet>
-					<outputFile>D:\SpigotJS-2.0.4.jar</outputFile>
 				</configuration>
 				<executions>
 					<execution>

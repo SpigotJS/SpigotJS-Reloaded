@@ -16,6 +16,7 @@ import javax.script.ScriptException;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
+import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
@@ -51,7 +52,7 @@ public class ScriptManager {
 	private List<ScriptBukkitCommand> scriptBukkitCommands;
 	
 	private Field bukkitCommandMap;
-	private CommandMap commandMap;
+	private SimpleCommandMap commandMap;
 	
 	private CommandManager commandManager;
 	private EventManager eventManager;
@@ -93,7 +94,7 @@ public class ScriptManager {
 		try {
 			bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 			bukkitCommandMap.setAccessible(true);
-			commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
+			commandMap = (SimpleCommandMap) bukkitCommandMap.get(Bukkit.getServer());
 			
 			engine = null;
 			ScriptEngineManager manager = new ScriptEngineManager(null);
@@ -126,7 +127,7 @@ public class ScriptManager {
 	public void unRegisterCommand(String cmd) {
 		try {
 			BukkitCommand command = (BukkitCommand) commandMap.getCommand(cmd);
-			Field knownCommandsField = commandMap.getClass().getDeclaredField("knownCommands");
+			Field knownCommandsField = commandMap.getClass().getSuperclass().getDeclaredField("knownCommands");
 			knownCommandsField.setAccessible(true);
 			@SuppressWarnings("unchecked")
 			HashMap<String, Command> knownCommands = (HashMap<String, Command>) knownCommandsField.get(commandMap);
