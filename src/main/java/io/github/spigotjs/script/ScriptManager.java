@@ -168,10 +168,11 @@ public class ScriptManager {
 			}
 			JSONObject jsonObject = (JSONObject) new JSONParser()
 					.parse(new String(Files.readAllBytes(resourceFile.toPath())));
+			String moduleName = jsonObject.containsKey("name") ? jsonObject.get("name").toString() : name;
 			if (!jsonObject.containsKey("version") || !jsonObject.containsKey("main")
 					|| !jsonObject.containsKey("author")) {
 				SpigotJSReloaded.getInstance().getLogger()
-						.severe("The resource \"" + name + "\" has an invalid resource.json file!");
+						.severe("The resource \"" + moduleName + "\" has an invalid resource.json file!");
 				return;
 			}
 			String version = jsonObject.get("version").toString();
@@ -179,14 +180,15 @@ public class ScriptManager {
 			String author = jsonObject.get("author").toString();
 			if (!main.exists()) {
 				SpigotJSReloaded.getInstance().getLogger()
-						.severe("The main file of the resource \"" + name + "\" does not exist!");
+						.severe("The main file of the resource \"" + moduleName + "\" does not exist!");
 				return;
 			}
-			ScriptResource resource = new ScriptResource(name, main, author, version);
+			ScriptResource resource = new ScriptResource(moduleName, main, author, version);
 			scriptResources.add(resource);
-			evalScript(new String(Files.readAllBytes(main.toPath())));
-			SpigotJSReloaded.getInstance().getLogger().info("Loaded " + name + " v" + version + " by " + author);
-
+			if ((jsonObject.containsKey("startup") && jsonObject.get("startup").toString() === "true") || !jsonObject.containsKey("startup")) {
+				evalScript(new String(Files.readAllBytes(main.toPath())));
+			}
+			SpigotJSReloaded.getInstance().getLogger().info("Loaded " + moduleName + " v" + version + " by " + author);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return;
