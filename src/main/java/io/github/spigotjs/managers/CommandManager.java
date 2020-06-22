@@ -8,6 +8,7 @@ import io.github.spigotjs.utils.ScriptCommand;
 
 public class CommandManager {
 	public void on(String name, String prefix, Consumer<ScriptCommand> consumer) {
+		if (prefix == null) { prefix = name; }
 		ScriptBukkitCommand command = new ScriptBukkitCommand(name, consumer);
 		SpigotJSReloaded.getInstance().getScriptManager().getScriptBukkitCommands().add(command);
 		SpigotJSReloaded.getInstance().getScriptManager().getCommandMap().register(name, prefix, command);
