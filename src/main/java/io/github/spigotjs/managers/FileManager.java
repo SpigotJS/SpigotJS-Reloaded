@@ -1,5 +1,7 @@
 package io.github.spigotjs.managers;
 
+import io.github.spigotjs.SpigotJSReloaded;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -68,15 +70,17 @@ public class FileManager {
             if (resourceFile.exists()) {
                 JSONObject config = (JSONObject) new JSONParser().parse(new String(Files.readAllBytes(resourceFile.toPath())));
                 String moduleName = config.containsKey("name") ? config.get("name").toString() : "";
-                if (moduleName == findModuleName) {
+                if (moduleName.equals(findModuleName)) {
                     runFileName = "scripts/" + moduleName + "/" + (config.containsKey("main") ? config.get("main") : "");
                 }
             } else {
-                runFileName = "scripts/" + findModuleName + "/" + findModuleName + ".js";
+                if (folderName.equals(findModuleName)) {
+                    runFileName = "scripts/" + findModuleName + "/" + findModuleName + ".js";
+                }
             }
         }
-        if (runFileName == "") {
-            throw new RuntimeException("The main file for \"" + findModuleName + "\" does not exist!");
+        if (runFileName.equals("")) {
+            throw new RuntimeException("The module \"" + findModuleName + "\" could not be found!");
         }
         File runFile = new File(runFileName);
         if (!runFile.exists()) {
