@@ -1,0 +1,8 @@
+io\github\spigotjs\script\addons\ScriptCodeAddon.class
+io\github\spigotjs\script\addons\ScriptAddonManager.class
+io\github\spigotjs\support\NodeConsole.class
+io\github\spigotjs\libraries\MySQL.class
+io\github\spigotjs\libraries\MySQL$MySQLConnection.class
+io\github\spigotjs\script\ScriptFolder.class
+io\github\spigotjs\script\addons\ScriptDeclarationAddon.class
+io\github\spigotjs\commands\SpigotJSCommandBase.class
