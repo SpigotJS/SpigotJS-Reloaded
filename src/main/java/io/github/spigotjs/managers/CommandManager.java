@@ -7,11 +7,12 @@ import io.github.spigotjs.utils.ScriptBukkitCommand;
 import io.github.spigotjs.utils.ScriptCommand;
 
 public class CommandManager {
-	
-	public void on(String name, Consumer<ScriptCommand> consumer) {
+
+	public void on(String name, String prefix, Consumer<ScriptCommand> consumer) {
+		if (prefix == undefined) { prefix  = name; }
 		ScriptBukkitCommand command = new ScriptBukkitCommand(name, consumer);
 		SpigotJSReloaded.getInstance().getScriptManager().getScriptBukkitCommands().add(command);
-		SpigotJSReloaded.getInstance().getScriptManager().getCommandMap().register(name, command);
+		SpigotJSReloaded.getInstance().getScriptManager().getCommandMap().register(name, prefix, command);
 	}
 
 }
