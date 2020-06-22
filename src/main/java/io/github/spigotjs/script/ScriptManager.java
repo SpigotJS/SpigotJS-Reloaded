@@ -183,9 +183,9 @@ public class ScriptManager {
 						.severe("The main file of the resource \"" + moduleName + "\" does not exist!");
 				return;
 			}
-			ScriptResource resource = new ScriptResource(moduleName, main, author, version);
+			ScriptResource resource = new ScriptResource(moduleName, name, main, author, version);
 			scriptResources.add(resource);
-			if ((jsonObject.containsKey("startup") && jsonObject.get("startup").toString() === "true") || !jsonObject.containsKey("startup")) {
+			if ((jsonObject.containsKey("startup") && jsonObject.get("startup").toString() == "true") || !jsonObject.containsKey("startup")) {
 				evalScript(new String(Files.readAllBytes(main.toPath())));
 			}
 			SpigotJSReloaded.getInstance().getLogger().info("Loaded " + moduleName + " v" + version + " by " + author);
