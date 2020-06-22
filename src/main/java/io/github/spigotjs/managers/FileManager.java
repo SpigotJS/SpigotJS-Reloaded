@@ -3,6 +3,11 @@ package io.github.spigotjs.managers;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.lang.RuntimeException;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import javax.script.CompiledScript;
 import javax.script.ScriptContext;
@@ -11,6 +16,9 @@ import javax.script.ScriptException;
 import com.coveo.nashorn_modules.Require;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 
+import lombok.Setter;
+
+@Setter
 public class FileManager {
 
     private NashornScriptEngine engine;
@@ -51,7 +59,7 @@ public class FileManager {
 		}
 	}
 
-    public require(String findModuleName) throws ScriptException {
+    public Object require(String findModuleName) throws ScriptException, RuntimeException, IOException, ParseException {
         File scriptDir = new File("scripts/");
         String runFileName = "";
         for (File file : scriptDir.listFiles()) {
@@ -59,7 +67,7 @@ public class FileManager {
             File resourceFile = new File("scripts/" + folderName + "/resource.json");
             if (resourceFile.exists()) {
                 JSONObject config = (JSONObject) new JSONParser().parse(new String(Files.readAllBytes(resourceFile.toPath())));
-                String moduleName = config.containsKey("name") ? config.get("name").toString() : moduleName;
+                String moduleName = config.containsKey("name") ? config.get("name").toString() : "";
                 if (moduleName == findModuleName) {
                     runFileName = "scripts/" + moduleName + "/" + (config.containsKey("main") ? config.get("main") : "");
                 }
@@ -67,13 +75,12 @@ public class FileManager {
                 runFileName = "scripts/" + findModuleName + "/" + findModuleName + ".js";
             }
         }
-        if (runFileName != "") {
-            return false;
+        if (runFileName == "") {
+            throw new RuntimeException("The main file for \"" + findModuleName + "\" does not exist!");
         }
         File runFile = new File(runFileName);
         if (!runFile.exists()) {
-            SpigotJSReloaded.getInstance().getLogger().severe("The main file for \"" + findModuleName + "\" does not exist!");
-            return false;
+            throw new RuntimeException("The main file for \"" + findModuleName + "\" does not exist!");
         }
         String script = new String(Files.readAllBytes(runFile.toPath()));
         CompiledScript compiledScript = engine.compile("(function(){let exports = {};" + script + "return exports;})();");
