@@ -48,25 +48,25 @@ public class ScriptManager {
 	private List<ScriptResource> scriptResources;
 	private File scriptDirectory;
 	private ScriptContext engineContext;
-	
+
 	private List<ScriptBukkitCommand> scriptBukkitCommands;
-	
+
 	private Field bukkitCommandMap;
 	private SimpleCommandMap commandMap;
-	
+
 	private CommandManager commandManager;
 	private EventManager eventManager;
 	private ConfigManager configManager;
 	private FileManager fileManager;
 	private TaskManager taskManager;
-	
+
 	/*
 	 * Node-Support
 	 */
 	private NodeConsole console;
 
 	private String codeFromAddons;
-	
+
 	public ScriptManager() {
 		scriptResources = new ArrayList<ScriptResource>();
 		scriptDirectory = new File("scripts/");
@@ -78,12 +78,12 @@ public class ScriptManager {
 		fileManager = new FileManager();
 		commandManager = new CommandManager();
 		taskManager = new TaskManager();
-		
+
 		/*
 		 * Node-Support
 		 */
 		console = new NodeConsole();
-		
+
 		codeFromAddons = "";
 		for(ScriptCodeAddon code : SpigotJSReloaded.getInstance().getScriptAddonManager().getCodeAddons()) {
 			codeFromAddons += (code.getCode() + ";");
@@ -95,7 +95,7 @@ public class ScriptManager {
 			bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 			bukkitCommandMap.setAccessible(true);
 			commandMap = (SimpleCommandMap) bukkitCommandMap.get(Bukkit.getServer());
-			
+
 			engine = null;
 			ScriptEngineManager manager = new ScriptEngineManager(null);
 			engine = (NashornScriptEngine) manager.getEngineByName("JavaScript");
@@ -119,6 +119,8 @@ public class ScriptManager {
 			bindings.put("__Plugin", SpigotJSReloaded.getInstance());
 			context.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
 			engineContext = context;
+            fileManager.setEngine(engine);
+            fileManager.setEngineContext(context);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -136,7 +138,7 @@ public class ScriptManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void loadScripts() {
 		loadRuntime();
 		for (ScriptBukkitCommand cmd : scriptBukkitCommands) {
@@ -149,11 +151,11 @@ public class ScriptManager {
 			if (!file.isDirectory()) {
 				SpigotJSReloaded.getInstance().getLogger()
 						.warning("There is a file in the \"scripts\" directory, that isnt a folder.");
-				
+
 			} else {
 				loadResource(file);
 			}
-			
+
 		}
 	}
 
@@ -187,8 +189,8 @@ public class ScriptManager {
 			scriptResources.add(resource);
 			if ((jsonObject.containsKey("startup") && jsonObject.get("startup").toString() == "true") || !jsonObject.containsKey("startup")) {
 				evalScript(new String(Files.readAllBytes(main.toPath())));
+                SpigotJSReloaded.getInstance().getLogger().info("Loaded " + moduleName + " v" + version + " by " + author);
 			}
-			SpigotJSReloaded.getInstance().getLogger().info("Loaded " + moduleName + " v" + version + " by " + author);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return;

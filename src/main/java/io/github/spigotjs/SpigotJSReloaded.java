@@ -22,16 +22,16 @@ public class SpigotJSReloaded extends JavaPlugin {
 
 	@Getter
 	private static SpigotJSReloaded instance;
-	
+
 	private JsonObject preDeclared;
 	private ScriptManager scriptManager;
-	
+
 	private ScriptAddonManager scriptAddonManager;
-	
+
 	private long start;
-	
+
 	public static final String PREFIX = "§6§lSpigot§e§lJS §8➥ §7";
-	
+
 	@Override
 	public void onLoad() {
 		try {
@@ -60,11 +60,11 @@ public class SpigotJSReloaded extends JavaPlugin {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	public ClassLoader getLoader() {
 		return getClassLoader();
 	}
-	
+
 	@Override
 	public void onEnable() {
 		getCommand("spigotjs").setExecutor(new SpigotJSCommandBase());
@@ -74,5 +74,5 @@ public class SpigotJSReloaded extends JavaPlugin {
 		getLogger().info("There are " + scriptAddonManager.getDeclarationAddons().size() + " declaration-addons and " + scriptAddonManager.getCodeAddons().size() + " code-addons registered.");
 		getLogger().info("Enabled SpigotJS in " + ms + "ms. Successfully loaded " + scriptManager.getScriptResources().size() + " scripts.");
 	}
-	
+
 }
