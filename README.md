@@ -1,6 +1,6 @@
 # SpigotJS - Reloaded
 ### Getting started
-Please look at our wiki-page [Getting Started](https://github.com/SpigotJS/SpigotJS-Reloaded/wiki/Getting-Started "Getting Started")
+Please look at our wiki-page [Installation](https://github.com/SpigotJS/SpigotJS-Reloaded/wiki/Installation "Installation")
 
 
 ------------
