@@ -17,6 +17,7 @@ import com.google.common.reflect.ClassPath;
 import io.github.spigotjs.SpigotJSReloaded;
 import lombok.Getter;
 
+@SuppressWarnings("unused")
 @Getter
 public class EventManager implements Listener {
 
