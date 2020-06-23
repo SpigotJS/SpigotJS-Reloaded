@@ -15,11 +15,11 @@ import javax.script.CompiledScript;
 import javax.script.ScriptContext;
 import javax.script.ScriptException;
 
-import com.coveo.nashorn_modules.Require;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 
 import lombok.Setter;
 
+@SuppressWarnings({ "restriction", "unused" })
 @Setter
 public class FileManager {
 
