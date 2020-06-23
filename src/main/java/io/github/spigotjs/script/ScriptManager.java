@@ -103,12 +103,12 @@ public class ScriptManager {
 			engine = null;
 			ScriptEngineManager manager = new ScriptEngineManager(null);
 			engine = (NashornScriptEngine) manager.getEngineByName("JavaScript");
-			Require.enable(engine, FilesystemFolder.create(scriptDirectory, "UTF-8"));
+			//Require.enable(engine, FilesystemFolder.create(scriptDirectory, "UTF-8"));
 			ScriptContext context = engine.getContext();
 			Bindings bindings = engine.createBindings();
 			for(ScriptDeclarationAddon declareAddon : SpigotJSReloaded.getInstance().getScriptAddonManager().getDeclarationAddons()) {
 				bindings.put(declareAddon.getClassName(), declareAddon.getClass());
-				//SpigotJSReloaded.getInstance().getLogger().info("Registered new declaration \"" + declareAddon.getClassName() + "\" for class \"" + declareAddon.getTargetClass().getName() + "\" by " + declareAddon.getSource());
+				console.info("Registered new declaration \"" + declareAddon.getClassName() + "\" for class \"" + declareAddon.getTargetClass().getName() + "\" by " + declareAddon.getSource());
 			}
 			bindings.put("PluginLogger", SpigotJSReloaded.getInstance().getLogger());
 			bindings.put("CommandManager", commandManager);
@@ -123,7 +123,8 @@ public class ScriptManager {
 			engineContext = context;
             fileManager.setEngine(engine);
             fileManager.setEngineContext(context);
-            engine.compile("const global = this;").eval(engineContext);
+            fileManager.setScriptManager(this);
+            engine.compile("const global = this; const require = FileManager.rrequire;").eval(engineContext);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -202,7 +203,7 @@ public class ScriptManager {
     	String script = (String) scripts.get(main);
     	try {
 			Require.enable(engine, ScriptFolder.create(new File("./scripts/"), "UTF-8"));
-			CompiledScript compiledScript = engine.compile("(function(){let exports = {};" + script + "return exports;})();");
+			CompiledScript compiledScript = engine.compile("(function(){const require = (function(module) { return FileManager.require(\"" + config.get("name") + "\", module); }); let exports = {};" + script + ";return exports;})();");
 	        compiledScript.eval(engineContext);
 		} catch (ScriptException e) {
 			console.warn("Could not run module '" + config.get("name") + "' on startup!");
@@ -319,7 +320,6 @@ public class ScriptManager {
 	}
 
 	private void evalScript(String script) throws ScriptException {
-		Require.enable(engine, ScriptFolder.create(new File("./scripts/"), "UTF-8"));
 		CompiledScript compiledScript = engine.compile("(function(){let exports = {};" + script + "return exports;})();");
 		compiledScript.eval(engineContext);
 	}
