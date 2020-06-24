@@ -104,10 +104,12 @@ public class ModuleManager {
             fileManager.setEngineContext(context);
             fileManager.setModuleManager(this);
             
-            engine.compile("const global = this;"
+            engine.compile("const JavaCompiler = Packages.io.github.spigotjs.compiler.JavaCompiler;"
+            			+ " const global = this;"
             			+ " const require = global.require = FileManager.require; "
             			+ " function onEvent(event, callback, priority) { if (!priority) { EventManager.on(event, callback); return; } EventManager.on(event, callback, priority); } "
-            			+ " function onCommand(name, callback, prefix) {if(prefix == undefined) {CommandManager.on(name, name, function (command) {callback(command.sender, command.args, command.label);});} else {CommandManager.on(name, prefix, function (command) {callback(command.sender, command.args, command.label);});}}").eval(engineContext);
+            			+ " function onCommand(name, callback, prefix) {if(prefix == undefined) {CommandManager.on(name, name, function (command) {callback(command.sender, command.args, command.label);});} else {CommandManager.on(name, prefix, function (command) {callback(command.sender, command.args, command.label);});}}"
+            			+ " function compileClass(name, code) { return JavaCompiler.compileClass(name, code); }").eval(engineContext);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
