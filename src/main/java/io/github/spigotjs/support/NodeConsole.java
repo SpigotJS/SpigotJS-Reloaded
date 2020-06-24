@@ -20,6 +20,7 @@ public class NodeConsole {
 			}
 		}
 		String msg = onlyString ? (String) obj : gson.toJson(obj);
+		msg = "[SJS] " + msg;
 		if (type.equals("[Info]")) SpigotJSReloaded.getInstance().getLogger().info(msg);
 		if (type.equals("[Warn]")) SpigotJSReloaded.getInstance().getLogger().warning(msg);
 		if (type.equals("[Debug]")) SpigotJSReloaded.getInstance().getLogger().info(msg);

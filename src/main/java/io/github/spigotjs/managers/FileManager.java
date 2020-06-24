@@ -67,6 +67,10 @@ public class FileManager {
 	public Object require(String... args) throws Exception {
 		String scope = args.length > 0 ? args[0] : "";
 		String scriptName = args.length > 1 ? args[1] : "";
+		if (scriptName.isEmpty() && !scope.isEmpty()) {
+			scriptName = scope;
+			scope = "";
+		}
 		Map<String, JSONObject> modules = scriptManager.getModules();
 		if (scriptName.startsWith("./")) {
 			if (!scope.isEmpty()) {
@@ -89,7 +93,7 @@ public class FileManager {
 	}
 	
 	private Object run(String script, String name) throws ScriptException {
-		CompiledScript compiledScript = engine.compile("(function(){const require = (function(module) { return FileManager.require(\"" + name + "\", module); }); let exports = {};" + script + ";return exports;})();");
+		CompiledScript compiledScript = engine.compile("(function(){const require = (function(module) { return FileManager.require('" + name + "', module); }); let exports = {};" + script + ";return exports;})();");
 		return compiledScript.eval(engineContext);
 	}
     

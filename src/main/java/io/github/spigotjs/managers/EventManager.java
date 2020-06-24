@@ -46,53 +46,54 @@ public class EventManager implements Listener {
 		this.eventNames = new HashMap<String, Class>();
 		try {
 			ClassPath path = ClassPath.from(Thread.currentThread().getContextClassLoader());
-			for(ClassPath.ClassInfo info : path.getTopLevelClasses()) {
-				for(String rawPackage : eventPackages) {
-					if(info.getName().startsWith(rawPackage)) {
+			for (ClassPath.ClassInfo info : path.getTopLevelClasses()) {
+				for (String rawPackage : eventPackages) {
+					if (info.getName().startsWith(rawPackage)) {
 						Class<?> clazz = info.load();
-						if(info.getSimpleName().toLowerCase().contains("event")) {
-							String name = info.getSimpleName().toLowerCase().replaceAll("event", "");
+						if (info.getSimpleName().toLowerCase().contains("event")) {
+							String name = info.getSimpleName().toLowerCase();
 							eventNames.put(name, clazz);
-						
+							eventNames.put(name.replaceAll("event", ""), clazz);
 						}
-	
 					}
-
 				}
-				
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void on(String eventName, Consumer<Event> consumer) {
-		on(eventNames.get(eventName.toLowerCase()), consumer);
+	public void on(String eventName, Consumer<Event> consumer) throws Exception {
+		eventName = eventName.toLowerCase();
+		if (eventNames.containsKey(eventName)) {
+			on(eventNames.get(eventName), consumer);
+		} else {
+			throw new Exception("Event name '" + eventName + "' not found!");
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void on(String eventName, Consumer<Event> consumer, EventPriority eventPriority) {
-		on(eventNames.get(eventName.toLowerCase()), consumer, eventPriority);
+	public void on(String eventName, Consumer<Event> consumer, EventPriority eventPriority) throws Exception {
+		eventName = eventName.toLowerCase();
+		if (eventNames.containsKey(eventName)) {
+			on(eventNames.get(eventName), consumer, eventPriority);
+		} else {
+			throw new Exception("Event name '" + eventName + "' not found!");
+		}
 	}
 	
 	public void on(Class<? extends Event> eventClass, Consumer<Event> consumer, EventPriority eventPriority) {
 		EventExecutor executor = new EventExecutor() {
-			
 			@Override
 			public void execute(Listener listener, Event event) throws EventException {
 				consumer.accept(event);
-				
 			}
 		};
 		Bukkit.getPluginManager().registerEvent(eventClass, this, eventPriority, executor, plugin);
-		
 	}
 	
 	public void on(Class<? extends Event> eventClass, Consumer<Event> consumer) {
 		on(eventClass, consumer, EventPriority.NORMAL);
 	}
-	
 }
