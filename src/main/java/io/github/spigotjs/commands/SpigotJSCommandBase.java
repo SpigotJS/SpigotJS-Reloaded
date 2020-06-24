@@ -18,7 +18,7 @@ public class SpigotJSCommandBase implements CommandExecutor {
 			return false;
 		}
 		if(args.length == 0) {
-			sender.sendMessage(SpigotJSReloaded.PREFIX + "§3SpigotJS-Reloaded version " + SpigotJSReloaded.getInstance().getDescription().getVersion());
+			sender.sendMessage(SpigotJSReloaded.PREFIX + "§3SpigotJS version " + SpigotJSReloaded.getInstance().getDescription().getVersion());
 			return false;
 		}
 		if(args.length == 1) {
