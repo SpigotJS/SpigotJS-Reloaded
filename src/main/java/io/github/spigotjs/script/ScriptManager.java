@@ -7,8 +7,8 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import javax.script.Bindings;
 import javax.script.CompiledScript;
@@ -18,18 +18,14 @@ import javax.script.ScriptException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandMap;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
-import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-import com.coveo.nashorn_modules.FilesystemFolder;
-import com.coveo.nashorn_modules.Require;
 
 import io.github.spigotjs.SpigotJSReloaded;
 import io.github.spigotjs.libraries.MySQL;
