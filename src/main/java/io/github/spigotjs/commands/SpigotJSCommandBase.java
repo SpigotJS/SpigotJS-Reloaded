@@ -1,18 +1,17 @@
 package io.github.spigotjs.commands;
 
 import java.util.List;
-
+import java.util.Map;
+import java.util.Set;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
+import org.json.simple.JSONObject;
 import io.github.spigotjs.SpigotJSReloaded;
-import io.github.spigotjs.script.ScriptResource;
 import io.github.spigotjs.script.addons.ScriptCodeAddon;
 import io.github.spigotjs.script.addons.ScriptDeclarationAddon;
 
-public class SpigotJSCommandBase implements CommandExecutor{
-
+public class SpigotJSCommandBase implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if(!sender.hasPermission("spigotjs.admin")) {
@@ -23,7 +22,6 @@ public class SpigotJSCommandBase implements CommandExecutor{
 			sender.sendMessage(SpigotJSReloaded.PREFIX + "§3SpigotJS-Reloaded version " + SpigotJSReloaded.getInstance().getDescription().getVersion());
 			return false;
 		}
-		
 		if(args.length == 1) {
 			String subCommand = args[0];
 			if(subCommand.equalsIgnoreCase("help")) {
@@ -33,20 +31,20 @@ public class SpigotJSCommandBase implements CommandExecutor{
 				sender.sendMessage(SpigotJSReloaded.PREFIX + "§7/" + label + " reload - Reloads all scripts");
 				return false;
 			}
-			
 			if(subCommand.equalsIgnoreCase("resources")) {
-				List<ScriptResource> scripts = SpigotJSReloaded.getInstance().getScriptManager().getScriptResources();
-				if(scripts.size() == 0) {
+				Map<String, JSONObject> modules = SpigotJSReloaded.getInstance().getScriptManager().getModules();
+				if (modules.size() == 0) {
 					sender.sendMessage(SpigotJSReloaded.PREFIX + "§7§oThere are no resources.");
 					return false;
 				}
-				sender.sendMessage(SpigotJSReloaded.PREFIX + "§3There are §e" + scripts.size() + " §3resources:");
-				for(ScriptResource resource : scripts) {
-					sender.sendMessage(SpigotJSReloaded.PREFIX + "§b" + resource.getName() + " v" + resource.getVersion() + " by " + resource.getAuthor());
+				sender.sendMessage(SpigotJSReloaded.PREFIX + "§3There are §e" + modules.size() + " §3resources:");
+				Set<String> iteset = modules.keySet();
+				for(String moduleName : iteset) {
+					JSONObject module = modules.get(moduleName);
+					sender.sendMessage(SpigotJSReloaded.PREFIX + "§b" + module.get("name") + " v" + module.get("version") + " by " + module.get("author"));
 				}
 				return false;
 			}
-			
 			if(subCommand.equalsIgnoreCase("addons")) {
 				List<ScriptCodeAddon> codeAddons = SpigotJSReloaded.getInstance().getScriptAddonManager().getCodeAddons(); 
 				List<ScriptDeclarationAddon> declareAddons = SpigotJSReloaded.getInstance().getScriptAddonManager().getDeclarationAddons();
@@ -55,7 +53,6 @@ public class SpigotJSCommandBase implements CommandExecutor{
 				} else {
 					sender.sendMessage(SpigotJSReloaded.PREFIX + "§3There are §e" + codeAddons.size() + " §ecode-addons");
 				}
-				
 				if(declareAddons.size() == 0) {
 					sender.sendMessage(SpigotJSReloaded.PREFIX + "§7§oThere are no declaration-addons");
 				} else {
@@ -63,7 +60,6 @@ public class SpigotJSCommandBase implements CommandExecutor{
 				}
 				return false;
 			}
-			
 			if(subCommand.equalsIgnoreCase("reload")) {
 				sender.sendMessage(SpigotJSReloaded.PREFIX + "§c§lNote: §cCommand reload should work now. Only testet in 1.8");
 				sender.sendMessage(SpigotJSReloaded.PREFIX + "§cReloading is not supported. Only use it for development.");
@@ -74,7 +70,4 @@ public class SpigotJSCommandBase implements CommandExecutor{
 		sender.sendMessage(SpigotJSReloaded.PREFIX + "§cInvalid usage. Type '/" + label + " help' for a list of valid commands.");
 		return false;
 	}
-
-
-
 }

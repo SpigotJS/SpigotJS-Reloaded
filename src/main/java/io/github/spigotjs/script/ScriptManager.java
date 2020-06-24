@@ -71,10 +71,6 @@ public class ScriptManager {
 	private NodeConsole console;
 	private String codeFromAddons;
 	public ScriptManager() {
-        modules = new HashMap<String, JSONObject>();
-        moduleDone = new ArrayList<String>();
-        moduleError = new ArrayList<String>();
-        moduleLoading = new ArrayList<String>();
 		scriptResources = new ArrayList<ScriptResource>();
 		scriptDirectory = new File("scripts/");
 		scriptDirectory.mkdir();
@@ -124,7 +120,7 @@ public class ScriptManager {
             fileManager.setEngine(engine);
             fileManager.setEngineContext(context);
             fileManager.setScriptManager(this);
-            engine.compile("const global = this; const require = FileManager.rrequire;").eval(engineContext);
+            engine.compile("const global = this; const require = global.require = FileManager.require;").eval(engineContext);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -202,8 +198,8 @@ public class ScriptManager {
     	JSONObject scripts = (JSONObject) config.get("scripts");
     	String script = (String) scripts.get(main);
     	try {
-			Require.enable(engine, ScriptFolder.create(new File("./scripts/"), "UTF-8"));
-			CompiledScript compiledScript = engine.compile("(function(){const require = (function(module) { return FileManager.require(\"" + config.get("name") + "\", module); }); let exports = {};" + script + ";return exports;})();");
+			//Require.enable(engine, ScriptFolder.create(new File("./scripts/"), "UTF-8"));
+			CompiledScript compiledScript = engine.compile("(function(){const require = (function(module) { return FileManager.require('" + config.get("name") + "', module); }); let exports = {};" + script + ";return exports;})();");
 	        compiledScript.eval(engineContext);
 		} catch (ScriptException e) {
 			console.warn("Could not run module '" + config.get("name") + "' on startup!");
@@ -226,6 +222,10 @@ public class ScriptManager {
 		HandlerList.unregisterAll((Plugin) SpigotJSReloaded.getInstance());
 		Bukkit.getScheduler().cancelTasks(SpigotJSReloaded.getInstance());
 		scriptBukkitCommands.clear();
+        modules = new HashMap<String, JSONObject>();
+        moduleDone = new ArrayList<String>();
+        moduleError = new ArrayList<String>();
+        moduleLoading = new ArrayList<String>();
         for (File folder : scriptDirectory.listFiles()) {
             String name = initModule(folder.getName());
             if (name.startsWith("::")) {
@@ -285,7 +285,7 @@ public class ScriptManager {
         console.info("Load Complete! Loaded " + modules.size() + " modules, started " + moduleDone.size() + " modules, with " + moduleError.size() + " modules erroring out!");
 	}
 
-	public void loadResource(File directory) {
+	public void loadResource(File directory) { // deprecated
 		try {
 			String name = directory.getName();
 			File resourceFile = new File("scripts/" + name + "/resource.json");
@@ -308,7 +308,6 @@ public class ScriptManager {
 			}
 			ScriptResource resource = new ScriptResource(moduleName, name, main, author, version);
 			scriptResources.add(resource);
-            // check dependencies
 			if ((jsonObject.containsKey("startup") && jsonObject.get("startup").toString() == "true") || !jsonObject.containsKey("startup")) {
 				evalScript(codeFromAddons + new String(Files.readAllBytes(main.toPath())));
                 console.info("Loaded " + moduleName + " v" + version + " by " + author);
@@ -319,8 +318,8 @@ public class ScriptManager {
 		}
 	}
 
-	private void evalScript(String script) throws ScriptException {
-		CompiledScript compiledScript = engine.compile("(function(){let exports = {};" + script + "return exports;})();");
+	private void evalScript(String script) throws ScriptException { // deprecated
+		CompiledScript compiledScript = engine.compile("(function(){let exports = {};const require = (function(module) { return FileManager.require('', module); });" + script + "return exports;})();");
 		compiledScript.eval(engineContext);
 	}
 

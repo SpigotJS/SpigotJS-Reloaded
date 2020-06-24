@@ -13,6 +13,7 @@ public class CommandManager {
 		SpigotJSReloaded.getInstance().getScriptManager().getScriptBukkitCommands().add(command);
 		SpigotJSReloaded.getInstance().getScriptManager().getCommandMap().register(name, prefix, command);
 	}
+	
 	public void on(String name, Consumer<ScriptCommand> consumer) {
 		on(name, null, consumer);
 	}
