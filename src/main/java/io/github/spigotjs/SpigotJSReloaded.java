@@ -18,15 +18,12 @@ public class SpigotJSReloaded extends JavaPlugin {
 	private ModuleManager moduleManager;
 
 
-	private long start;
-
 	public static final String PREFIX = "§6§lSpigot§e§lJS §8➥ §7";
 
 	@Override
 	public void onLoad() {
 		try {
 			Thread.currentThread().setContextClassLoader(getClassLoader());
-			start = System.currentTimeMillis();
 			instance = this;
 		} catch(Exception ex) {
 			ex.printStackTrace();
