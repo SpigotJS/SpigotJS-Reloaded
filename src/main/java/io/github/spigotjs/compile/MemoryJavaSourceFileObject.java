@@ -3,7 +3,6 @@ package io.github.spigotjs.compile;
 import java.io.IOException;
 import java.net.URI;
 
-import javax.tools.JavaFileObject.Kind;
 import javax.tools.SimpleJavaFileObject;
 
 public class MemoryJavaSourceFileObject extends SimpleJavaFileObject {

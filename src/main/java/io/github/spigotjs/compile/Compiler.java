@@ -1,12 +1,5 @@
 package io.github.spigotjs.compile;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,16 +7,12 @@ import java.util.Map;
 
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
-import javax.tools.FileObject;
-import javax.tools.ForwardingJavaFileManager;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
-import javax.tools.SimpleJavaFileObject;
-import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-public class RuntimeCompiler {
+public class Compiler {
 
 	private final JavaCompiler javaCompiler;
 	private final Map<String, byte[]> classData;
@@ -31,7 +20,7 @@ public class RuntimeCompiler {
 	private final ClassDataFileManager classDataFileManager;
 	private final List<JavaFileObject> compilationUnits;
 
-	public RuntimeCompiler() {
+	public Compiler() {
 		this.javaCompiler = ToolProvider.getSystemJavaCompiler();
 		if (javaCompiler == null) {
 			throw new NullPointerException(
@@ -49,7 +38,7 @@ public class RuntimeCompiler {
 		compilationUnits.add(javaFileObject);
 	}
 
-	boolean compile() {
+	public boolean compile() {
 		DiagnosticCollector<JavaFileObject> diagnosticsCollector = new DiagnosticCollector<JavaFileObject>();
 		CompilationTask task = javaCompiler.getTask(null, classDataFileManager, diagnosticsCollector, null, null,
 				compilationUnits);
