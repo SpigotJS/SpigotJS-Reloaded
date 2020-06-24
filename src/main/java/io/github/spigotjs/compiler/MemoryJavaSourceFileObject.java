@@ -1,4 +1,4 @@
-package io.github.spigotjs.compile;
+package io.github.spigotjs.compiler;
 
 import java.io.IOException;
 import java.net.URI;

@@ -6,8 +6,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.google.gson.JsonObject;
 
 import io.github.spigotjs.commands.SpigotJSCommandBase;
-import io.github.spigotjs.compile.MethodInvocationUtils;
-import io.github.spigotjs.compile.Compiler;
+import io.github.spigotjs.compiler.Compiler;
+import io.github.spigotjs.compiler.MethodInvocationUtils;
 import io.github.spigotjs.module.ModuleManager;
 import lombok.Getter;
 

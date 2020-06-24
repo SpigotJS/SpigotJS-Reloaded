@@ -1,4 +1,4 @@
-package io.github.spigotjs.compile;
+package io.github.spigotjs.compiler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
