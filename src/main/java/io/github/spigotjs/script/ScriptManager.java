@@ -95,7 +95,6 @@ public class ScriptManager {
 			engine = null;
 			ScriptEngineManager manager = new ScriptEngineManager(null);
 			engine = (NashornScriptEngine) manager.getEngineByName("JavaScript");
-			//Require.enable(engine, FilesystemFolder.create(scriptDirectory, "UTF-8"));
 			ScriptContext context = engine.getContext();
 			Bindings bindings = engine.createBindings();
 			for(ScriptDeclarationAddon declareAddon : SpigotJSReloaded.getInstance().getScriptAddonManager().getDeclarationAddons()) {
@@ -194,7 +193,6 @@ public class ScriptManager {
     	JSONObject scripts = (JSONObject) config.get("scripts");
     	String script = (String) scripts.get(main);
     	try {
-			//Require.enable(engine, ScriptFolder.create(new File("./scripts/"), "UTF-8"));
 			CompiledScript compiledScript = engine.compile("(function(){const require = (function(module) { return FileManager.require('" + config.get("name") + "', module); }); let exports = {};" + script + ";return exports;})();");
 	        compiledScript.eval(engineContext);
 		} catch (ScriptException e) {
@@ -279,44 +277,6 @@ public class ScriptManager {
         	}
         }
         console.info("Load Complete! Loaded " + modules.size() + " modules, started " + moduleDone.size() + " modules, with " + moduleError.size() + " modules erroring out!");
-	}
-
-	public void loadResource(File directory) { // deprecated
-		try {
-			String name = directory.getName();
-			File resourceFile = new File("scripts/" + name + "/resource.json");
-			if (!resourceFile.exists()) {
-				SpigotJSReloaded.getInstance().getLogger().severe("The resource \"" + name + "\" misses a resource.json file!");
-				return;
-			}
-			JSONObject jsonObject = (JSONObject) new JSONParser().parse(new String(Files.readAllBytes(resourceFile.toPath())));
-			String moduleName = jsonObject.containsKey("name") ? jsonObject.get("name").toString() : name;
-			if (!jsonObject.containsKey("version") || !jsonObject.containsKey("main") || !jsonObject.containsKey("author")) {
-				console.warn("The resource \"" + moduleName + "\" has an invalid resource.json file!");
-				return;
-			}
-			String version = jsonObject.get("version").toString();
-			File main = new File("scripts/" + name + "/" + jsonObject.get("main").toString());
-			String author = jsonObject.get("author").toString();
-			if (!main.exists()) {
-				console.warn("The main file of the resource \"" + moduleName + "\" does not exist!");
-				return;
-			}
-			ScriptResource resource = new ScriptResource(moduleName, name, main, author, version);
-			scriptResources.add(resource);
-			if ((jsonObject.containsKey("startup") && jsonObject.get("startup").toString() == "true") || !jsonObject.containsKey("startup")) {
-				evalScript(codeFromAddons + new String(Files.readAllBytes(main.toPath())));
-                console.info("Loaded " + moduleName + " v" + version + " by " + author);
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			return;
-		}
-	}
-
-	private void evalScript(String script) throws ScriptException { // deprecated
-		CompiledScript compiledScript = engine.compile("(function(){let exports = {};const require = (function(module) { return FileManager.require('', module); });" + script + "return exports;})();");
-		compiledScript.eval(engineContext);
 	}
 
 }
