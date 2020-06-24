@@ -1,5 +1,6 @@
 package io.github.spigotjs;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.gson.JsonObject;
@@ -25,6 +26,7 @@ public class SpigotJSReloaded extends JavaPlugin {
 		try {
 			Thread.currentThread().setContextClassLoader(getClassLoader());
 			instance = this;
+			
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
