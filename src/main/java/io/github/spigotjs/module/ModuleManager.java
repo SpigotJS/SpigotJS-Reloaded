@@ -1,4 +1,4 @@
-package io.github.spigotjs.script;
+package io.github.spigotjs.module;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,19 +35,19 @@ import io.github.spigotjs.managers.EventManager;
 import io.github.spigotjs.managers.FileManager;
 import io.github.spigotjs.managers.TaskManager;
 import io.github.spigotjs.support.NodeConsole;
-import io.github.spigotjs.utils.ScriptBukkitCommand;
+import io.github.spigotjs.utils.ModuleBukkitCommand;
 import jdk.internal.dynalink.beans.StaticClass;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import lombok.Getter;
 
 @SuppressWarnings({ "restriction", "unused" })
 @Getter
-public class ScriptManager {
+public class ModuleManager {
 	private NashornScriptEngine engine;
-	private List<ScriptResource> scriptResources;
+	private List<JSModule> scriptResources;
 	private File scriptDirectory;
 	private ScriptContext engineContext;
-	private List<ScriptBukkitCommand> scriptBukkitCommands;
+	private List<ModuleBukkitCommand> scriptBukkitCommands;
 	private Field bukkitCommandMap;
 	private SimpleCommandMap commandMap;
 	private CommandManager commandManager;
@@ -64,11 +64,11 @@ public class ScriptManager {
 	 */
 	private NodeConsole console;
 	private String codeFromAddons;
-	public ScriptManager() {
-		scriptResources = new ArrayList<ScriptResource>();
+	public ModuleManager() {
+		scriptResources = new ArrayList<JSModule>();
 		scriptDirectory = new File("jsmodules/");
 		scriptDirectory.mkdir();
-		scriptBukkitCommands = new ArrayList<ScriptBukkitCommand>();
+		scriptBukkitCommands = new ArrayList<ModuleBukkitCommand>();
 		System.setProperty("nashorn.args", "--language=es6");
 		eventManager = new EventManager(SpigotJSReloaded.getInstance());
 		configManager = new ConfigManager();
@@ -204,7 +204,7 @@ public class ScriptManager {
 	@SuppressWarnings("unchecked")
 	public void loadScripts() {
 		loadRuntime();
-		for (ScriptBukkitCommand cmd : scriptBukkitCommands) {
+		for (ModuleBukkitCommand cmd : scriptBukkitCommands) {
 			unRegisterCommand(cmd.getName());
 		}
 		HandlerList.unregisterAll((Plugin) SpigotJSReloaded.getInstance());

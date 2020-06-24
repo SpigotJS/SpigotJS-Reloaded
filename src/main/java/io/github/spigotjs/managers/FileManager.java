@@ -1,7 +1,7 @@
 package io.github.spigotjs.managers;
 
 import io.github.spigotjs.SpigotJSReloaded;
-import io.github.spigotjs.script.ScriptManager;
+import io.github.spigotjs.module.ModuleManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class FileManager {
 	
     private NashornScriptEngine engine;
 	private ScriptContext engineContext;
-	private ScriptManager scriptManager;
+	private ModuleManager scriptManager;
 	
 	public boolean exists(String path) {
 		return new File(path).exists();

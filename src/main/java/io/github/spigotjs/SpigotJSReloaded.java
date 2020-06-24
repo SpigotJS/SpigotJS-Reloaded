@@ -5,7 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.google.gson.JsonObject;
 
 import io.github.spigotjs.commands.SpigotJSCommandBase;
-import io.github.spigotjs.script.ScriptManager;
+import io.github.spigotjs.module.ModuleManager;
 import lombok.Getter;
 
 @Getter
@@ -15,7 +15,7 @@ public class SpigotJSReloaded extends JavaPlugin {
 	private static SpigotJSReloaded instance;
 
 	private JsonObject preDeclared;
-	private ScriptManager scriptManager;
+	private ModuleManager scriptManager;
 
 
 	private long start;
@@ -40,7 +40,7 @@ public class SpigotJSReloaded extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		getCommand("spigotjs").setExecutor(new SpigotJSCommandBase());
-		scriptManager = new ScriptManager();
+		scriptManager = new ModuleManager();
 		scriptManager.loadScripts();
 	}
 

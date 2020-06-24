@@ -1,4 +1,4 @@
-package io.github.spigotjs.script;
+package io.github.spigotjs.module;
 
 import java.io.File;
 
@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class ScriptResource {
+public class JSModule {
 
 	private String name;
 	private String folderName;

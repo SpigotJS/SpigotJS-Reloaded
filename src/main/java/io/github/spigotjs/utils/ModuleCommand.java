@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter @AllArgsConstructor
-public class ScriptCommand {
+public class ModuleCommand {
 
 	private CommandSender sender;
 	private String label;
