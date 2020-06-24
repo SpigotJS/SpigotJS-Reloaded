@@ -15,7 +15,7 @@ public class SpigotJSReloaded extends JavaPlugin {
 	private static SpigotJSReloaded instance;
 
 	private JsonObject preDeclared;
-	private ModuleManager scriptManager;
+	private ModuleManager moduleManager;
 
 
 	private long start;
@@ -40,8 +40,8 @@ public class SpigotJSReloaded extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		getCommand("spigotjs").setExecutor(new SpigotJSCommandBase());
-		scriptManager = new ModuleManager();
-		scriptManager.loadScripts();
+		moduleManager = new ModuleManager();
+		moduleManager.loadModules();
 	}
 
 }

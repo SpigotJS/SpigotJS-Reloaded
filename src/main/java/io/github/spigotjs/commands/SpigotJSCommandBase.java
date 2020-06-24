@@ -26,11 +26,11 @@ public class SpigotJSCommandBase implements CommandExecutor {
 			if(subCommand.equalsIgnoreCase("help")) {
 				sender.sendMessage(SpigotJSReloaded.PREFIX + "§7/" + label + " help - Displays this message");
 				sender.sendMessage(SpigotJSReloaded.PREFIX + "§7/" + label + " modules - Shows all modules");
-				sender.sendMessage(SpigotJSReloaded.PREFIX + "§7/" + label + " reload - Reloads all scripts");
+				sender.sendMessage(SpigotJSReloaded.PREFIX + "§7/" + label + " reload - Reloads all modules");
 				return false;
 			}
 			if(subCommand.equalsIgnoreCase("modules")) {
-				Map<String, JSONObject> modules = SpigotJSReloaded.getInstance().getScriptManager().getModules();
+				Map<String, JSONObject> modules = SpigotJSReloaded.getInstance().getModuleManager().getModules();
 				if (modules.size() == 0) {
 					sender.sendMessage(SpigotJSReloaded.PREFIX + "§7§oThere are no modules.");
 					return false;
@@ -45,7 +45,7 @@ public class SpigotJSCommandBase implements CommandExecutor {
 			}
 			if(subCommand.equalsIgnoreCase("reload")) {
 				sender.sendMessage(SpigotJSReloaded.PREFIX + "§cReloading is not supported. Only use it for development.");
-				SpigotJSReloaded.getInstance().getScriptManager().loadScripts();
+				SpigotJSReloaded.getInstance().getModuleManager().loadModules();
 				return false;
 			}
 		}

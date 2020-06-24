@@ -44,10 +44,9 @@ import lombok.Getter;
 @Getter
 public class ModuleManager {
 	private NashornScriptEngine engine;
-	private List<JSModule> scriptResources;
-	private File scriptDirectory;
+	private File modulesDirectory;
 	private ScriptContext engineContext;
-	private List<ModuleBukkitCommand> scriptBukkitCommands;
+	private List<ModuleBukkitCommand> moduleBukkitCommands;
 	private Field bukkitCommandMap;
 	private SimpleCommandMap commandMap;
 	private CommandManager commandManager;
@@ -65,10 +64,9 @@ public class ModuleManager {
 	private NodeConsole console;
 	private String codeFromAddons;
 	public ModuleManager() {
-		scriptResources = new ArrayList<JSModule>();
-		scriptDirectory = new File("jsmodules/");
-		scriptDirectory.mkdir();
-		scriptBukkitCommands = new ArrayList<ModuleBukkitCommand>();
+		modulesDirectory = new File("jsmodules/");
+		modulesDirectory.mkdir();
+		moduleBukkitCommands = new ArrayList<ModuleBukkitCommand>();
 		System.setProperty("nashorn.args", "--language=es6");
 		eventManager = new EventManager(SpigotJSReloaded.getInstance());
 		configManager = new ConfigManager();
@@ -104,7 +102,7 @@ public class ModuleManager {
 			engineContext = context;
             fileManager.setEngine(engine);
             fileManager.setEngineContext(context);
-            fileManager.setScriptManager(this);
+            fileManager.setModuleManager(this);
             
             engine.compile("const global = this;"
             			+ " const require = global.require = FileManager.require; "
@@ -202,19 +200,19 @@ public class ModuleManager {
     }
     
 	@SuppressWarnings("unchecked")
-	public void loadScripts() {
+	public void loadModules() {
 		loadRuntime();
-		for (ModuleBukkitCommand cmd : scriptBukkitCommands) {
+		for (ModuleBukkitCommand cmd : moduleBukkitCommands) {
 			unRegisterCommand(cmd.getName());
 		}
 		HandlerList.unregisterAll((Plugin) SpigotJSReloaded.getInstance());
 		Bukkit.getScheduler().cancelTasks(SpigotJSReloaded.getInstance());
-		scriptBukkitCommands.clear();
+		moduleBukkitCommands.clear();
         modules = new HashMap<String, JSONObject>();
         moduleDone = new ArrayList<String>();
         moduleError = new ArrayList<String>();
         moduleLoading = new ArrayList<String>();
-        for (File folder : scriptDirectory.listFiles()) {
+        for (File folder : modulesDirectory.listFiles()) {
             String name = initModule(folder.getName());
             if (name.startsWith("::")) {
                 console.error("Module issue: 'jsmodules/" + folder.getName() + "'");

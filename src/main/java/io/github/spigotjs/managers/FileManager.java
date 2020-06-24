@@ -28,7 +28,7 @@ public class FileManager {
 	
     private NashornScriptEngine engine;
 	private ScriptContext engineContext;
-	private ModuleManager scriptManager;
+	private ModuleManager moduleManager;
 	
 	public boolean exists(String path) {
 		return new File(path).exists();
@@ -71,7 +71,7 @@ public class FileManager {
 			scriptName = scope;
 			scope = "";
 		}
-		Map<String, JSONObject> modules = scriptManager.getModules();
+		Map<String, JSONObject> modules = moduleManager.getModules();
 		if (scriptName.startsWith("./")) {
 			if (!scope.isEmpty()) {
 				scriptName = scriptName.split("./")[1];

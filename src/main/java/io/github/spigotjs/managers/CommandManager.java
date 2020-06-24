@@ -10,8 +10,8 @@ public class CommandManager {
 	public void on(String name, String prefix, Consumer<ModuleCommand> consumer) {
 		if (prefix == null) { prefix = name; }
 		ModuleBukkitCommand command = new ModuleBukkitCommand(name, consumer);
-		SpigotJSReloaded.getInstance().getScriptManager().getScriptBukkitCommands().add(command);
-		SpigotJSReloaded.getInstance().getScriptManager().getCommandMap().register(name, prefix, command);
+		SpigotJSReloaded.getInstance().getModuleManager().getModuleBukkitCommands().add(command);
+		SpigotJSReloaded.getInstance().getModuleManager().getCommandMap().register(name, prefix, command);
 	}
 	
 	public void on(String name, Consumer<ModuleCommand> consumer) {
