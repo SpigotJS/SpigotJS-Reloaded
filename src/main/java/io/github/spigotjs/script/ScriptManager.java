@@ -34,8 +34,6 @@ import io.github.spigotjs.managers.ConfigManager;
 import io.github.spigotjs.managers.EventManager;
 import io.github.spigotjs.managers.FileManager;
 import io.github.spigotjs.managers.TaskManager;
-import io.github.spigotjs.script.addons.ScriptCodeAddon;
-import io.github.spigotjs.script.addons.ScriptDeclarationAddon;
 import io.github.spigotjs.support.NodeConsole;
 import io.github.spigotjs.utils.ScriptBukkitCommand;
 import jdk.internal.dynalink.beans.StaticClass;
@@ -68,7 +66,7 @@ public class ScriptManager {
 	private String codeFromAddons;
 	public ScriptManager() {
 		scriptResources = new ArrayList<ScriptResource>();
-		scriptDirectory = new File("scripts/");
+		scriptDirectory = new File("jsmodules/");
 		scriptDirectory.mkdir();
 		scriptBukkitCommands = new ArrayList<ScriptBukkitCommand>();
 		System.setProperty("nashorn.args", "--language=es6");
@@ -81,10 +79,6 @@ public class ScriptManager {
 		 * Node-Support
 		 */
 		console = new NodeConsole();
-		codeFromAddons = "";
-		for(ScriptCodeAddon code : SpigotJSReloaded.getInstance().getScriptAddonManager().getCodeAddons()) {
-			codeFromAddons += (code.getCode() + ";");
-		}
 	}
 
 	public void loadRuntime() {
@@ -97,10 +91,6 @@ public class ScriptManager {
 			engine = (NashornScriptEngine) manager.getEngineByName("JavaScript");
 			ScriptContext context = engine.getContext();
 			Bindings bindings = engine.createBindings();
-			for(ScriptDeclarationAddon declareAddon : SpigotJSReloaded.getInstance().getScriptAddonManager().getDeclarationAddons()) {
-				bindings.put(declareAddon.getClassName(), declareAddon.getClass());
-				console.info("Registered new declaration \"" + declareAddon.getClassName() + "\" for class \"" + declareAddon.getTargetClass().getName() + "\" by " + declareAddon.getSource());
-			}
 			bindings.put("PluginLogger", SpigotJSReloaded.getInstance().getLogger());
 			bindings.put("CommandManager", commandManager);
 			bindings.put("EventManager", eventManager);
@@ -115,9 +105,11 @@ public class ScriptManager {
             fileManager.setEngine(engine);
             fileManager.setEngineContext(context);
             fileManager.setScriptManager(this);
+            
             engine.compile("const global = this;"
             			+ " const require = global.require = FileManager.require; "
-            			+ " function onEvent(event, callback, priority) { if (!priority) { EventManager.on(event, callback); return; } EventManager.on(event, callback, priority); }").eval(engineContext);
+            			+ " function onEvent(event, callback, priority) { if (!priority) { EventManager.on(event, callback); return; } EventManager.on(event, callback, priority); } "
+            			+ " function onCommand(name, callback) { CommandManager.on(name, function(command) { callback(command.sender, command.args, command.label); }); }").eval(engineContext);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -138,16 +130,16 @@ public class ScriptManager {
 
 	@SuppressWarnings("unchecked")
 	private String initModule(String folderName) {
-        File folder = new File("scripts/" + folderName);
+        File folder = new File("jsmodules/" + folderName);
         if (!folder.exists()) {
-        	return "::Cannot find module folder.";
+        	return "::Cannot find jsmodules/ folder.";
         }
         if (!folder.isDirectory()) {
         	return "::Module '" + folderName + "' isn't folder, skipping...";
         }
-        File res = new File("scripts/" + folderName + "/resource.json");
+        File res = new File("jsmodules/" + folderName + "/resource.json");
         if (!res.exists()) {
-        	return "::Resource.json non existent.";
+        	return "::resource.json non existent.";
         }
         JSONObject config;
         try {
@@ -172,7 +164,7 @@ public class ScriptManager {
         config.put("$loadAttempts", 0);
         config.put("$started", false);
         JSONObject scripts = new JSONObject();
-        File moduleFiles = new File("scripts/" + folderName);
+        File moduleFiles = new File("jsmodules/" + folderName);
         for (File file : moduleFiles.listFiles()) {
             if (file.isDirectory()) { continue; }
             if (!file.getName().endsWith(".js")) { continue; }
@@ -225,7 +217,7 @@ public class ScriptManager {
         for (File folder : scriptDirectory.listFiles()) {
             String name = initModule(folder.getName());
             if (name.startsWith("::")) {
-                console.error("Module issue: 'scripts/" + folder.getName() + "'");
+                console.error("Module issue: 'jsmodules/" + folder.getName() + "'");
                 console.error(name);
                 continue;
             }
