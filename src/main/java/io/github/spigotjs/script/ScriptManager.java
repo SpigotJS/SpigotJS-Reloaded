@@ -115,7 +115,9 @@ public class ScriptManager {
             fileManager.setEngine(engine);
             fileManager.setEngineContext(context);
             fileManager.setScriptManager(this);
-            engine.compile("const global = this; const require = global.require = FileManager.require;").eval(engineContext);
+            engine.compile("const global = this;"
+            			+ " const require = global.require = FileManager.require; "
+            			+ " function onEvent(event, callback, priority) { if (!priority) { EventManager.on(event, callback); return; } EventManager.on(event, callback, priority); }").eval(engineContext);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
