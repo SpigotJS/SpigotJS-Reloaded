@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.google.gson.JsonObject;
 
 import io.github.spigotjs.commands.SpigotJSCommandBase;
+import io.github.spigotjs.compile.RuntimeCompiler;
 import io.github.spigotjs.module.ModuleManager;
 import lombok.Getter;
 
@@ -20,7 +21,7 @@ public class SpigotJSReloaded extends JavaPlugin {
 
 
 	public static final String PREFIX = "§6§lSpigot§e§lJS §8➥ §7";
-
+	
 	@Override
 	public void onLoad() {
 		try {
