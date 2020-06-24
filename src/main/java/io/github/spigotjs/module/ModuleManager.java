@@ -107,7 +107,7 @@ public class ModuleManager {
             engine.compile("const global = this;"
             			+ " const require = global.require = FileManager.require; "
             			+ " function onEvent(event, callback, priority) { if (!priority) { EventManager.on(event, callback); return; } EventManager.on(event, callback, priority); } "
-            			+ " function onCommand(name, prefix, callback) { CommandManager.on(name, prefix, function(command) { callback(command.sender, command.args, command.label); }); }").eval(engineContext);
+            			+ " function onCommand(name, callback, prefix) {if(prefix == undefined) {CommandManager.on(name, name, function (command) {callback(command.sender, command.args, command.label);});} else {CommandManager.on(name, prefix, function (command) {callback(command.sender, command.args, command.label);});}}").eval(engineContext);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
