@@ -6,7 +6,7 @@ public class JavaCompiler {
 		Compiler compiler = new Compiler();
 		compiler.addClass(className, code);
 		compiler.compile();
-		return compiler.getClass();
+		return compiler.getCompiledClass(className);
 	}
 
 }

@@ -2,6 +2,7 @@ name: ${artifactId}
 version: ${version}
 main: io.github.spigotjs.SpigotJSReloaded
 load: STARTUP
+api-version: 1.15
 
 commands:
   spigotjs:
