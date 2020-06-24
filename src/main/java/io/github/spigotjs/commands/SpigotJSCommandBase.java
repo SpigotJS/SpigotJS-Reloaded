@@ -3,10 +3,12 @@ package io.github.spigotjs.commands;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.json.simple.JSONObject;
+
 import io.github.spigotjs.SpigotJSReloaded;
 import io.github.spigotjs.script.addons.ScriptCodeAddon;
 import io.github.spigotjs.script.addons.ScriptDeclarationAddon;

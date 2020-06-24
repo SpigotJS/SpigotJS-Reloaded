@@ -40,7 +40,7 @@ public class SpigotJSReloaded extends JavaPlugin {
 			instance = this;
 			scriptAddonManager = new ScriptAddonManager();
 			getDataFolder().mkdir();
-			File predeclaredFile = new File("plugins/SpigotJS-Reloaded/predeclared.json");
+			File predeclaredFile = new File("plugins/SpigotJS/predeclared.json");
 			if(!predeclaredFile.exists()) {
 				predeclaredFile.createNewFile();
 		        Gson gson = new GsonBuilder().setPrettyPrinting().create();
