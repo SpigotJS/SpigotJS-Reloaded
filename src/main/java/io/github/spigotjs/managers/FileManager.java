@@ -93,7 +93,7 @@ public class FileManager {
 	}
 	
 	private Object run(String script, String name) throws ScriptException {
-		CompiledScript compiledScript = engine.compile("(function(){const require = (function(module) { return FileManager.require('" + name + "', module); }); let exports = {};" + script + ";return exports;})();");
+		CompiledScript compiledScript = engine.compile("(function(){ const require = (function(module) { return FileManager.require('" + name + "', module); }); let exports = {}; " + script + "; return exports; })();");
 		return compiledScript.eval(engineContext);
 	}
     
