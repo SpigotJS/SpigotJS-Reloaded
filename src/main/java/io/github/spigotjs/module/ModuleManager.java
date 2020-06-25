@@ -206,22 +206,13 @@ public class ModuleManager {
 				// val = val;
 			}
 			if (val instanceof Integer || val instanceof Long) {
-				JSONArray arr = new JSONArray();
 				val = (Number) val;
-				arr.add(val);
-				val = arr.toJSONString() + "[0]";
 			}
 			if (val instanceof Float || val instanceof Double) {
-				JSONArray arr = new JSONArray();
 				val = (Number) val;
-				arr.add(val);
-				val = arr.toJSONString() + "[0]";
 			}
 			if (val instanceof Boolean) {
-				JSONArray arr = new JSONArray();
 				val = (Boolean) val;
-				arr.add(val);
-				val = arr.toJSONString() + "[0]";
 			}
 			if (val instanceof String) {
 				JSONArray arr = new JSONArray();

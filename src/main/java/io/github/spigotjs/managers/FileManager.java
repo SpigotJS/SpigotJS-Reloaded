@@ -30,38 +30,64 @@ public class FileManager {
 	private ScriptContext engineContext;
 	private ModuleManager moduleManager;
 	
-	public boolean exists(String path) {
-		return new File(path).exists();
+	public boolean exist(String path) {
+		return !type(path).equals("none");
 	}
 	
-	public void create(String path) {
+	public String type(String path) {
+		File file = new File(path);
+		return file.exists() ? file.isDirectory() ? "folder" : "file" : "none";
+	}
+	
+	public boolean mkdir(String path) throws Exception {
 		File file = new File(path);
 		File parent = file.getParentFile();
-		if(parent != null) {
+		if (!parent.exists()) {
 			parent.mkdirs();
 		}
-		try {
-			file.createNewFile();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (parent.isFile()) {
+			return false;
 		}
+		if (file.isDirectory()) {
+			return false;
+		}
+		if (file.isFile()) {
+			return false;
+		}
+		return file.mkdir();
 	}
 	
-	public String load(String path) {
-		try {
-			return new String(Files.readAllBytes(new File(path).toPath()));
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
+	public boolean write(String path, String text) throws IOException {
+		File file = new File(path);
+		File parent = file.getParentFile();
+		if (!parent.exists()) {
+			if (parent.isFile()) {
+				return false;
+			}
+			if (!parent.mkdirs()) {
+				return false;
+			}
 		}
+		if (!file.exists()) {
+			if (!file.createNewFile()) {
+				return false;
+			}
+		}
+		Files.write(file.toPath(), text.getBytes());
+		return true;
 	}
 	
-	public void save(String path, String lines) {
-		try {
-			Files.write(new File(path).toPath(), lines.getBytes());
-		} catch (IOException e) {
-			e.printStackTrace();
+	public String read(String path) throws IOException {
+		File file = new File(path);
+		if (!file.exists() || file.isDirectory()) {
+			return "";
 		}
+		return new String(Files.readAllBytes(new File(path).toPath()));
+	}
+	
+	public boolean delete(String path) {
+		File file = new File(path);
+		return file.delete();
 	}
 	
 	public Object require(String... args) throws Exception {
