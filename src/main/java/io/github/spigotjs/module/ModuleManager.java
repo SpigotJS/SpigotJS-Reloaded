@@ -188,6 +188,7 @@ public class ModuleManager {
 		}
 		config.put("scripts", scripts);
 		modules.put(name, config);
+		new File("jsconfigs/" + name).mkdirs();
 		return name;
 	}
 	
@@ -224,7 +225,7 @@ public class ModuleManager {
 			additionalVars += "let " + varName + " = doVarParse(" + val + ");";
 		}
 		try {
-			CompiledScript compiledScript = engine.compile("(function(){ const require = (function(module) { return FileManager.require('" + config.get("name") + "', module); }); let exports = {}; " + additionalVars + " " + script + "; return exports; })();");
+			CompiledScript compiledScript = engine.compile("(function(){ const require = (function(module) { return FileManager.require('" + config.get("name") + "', module); }); const config = (function(file, data) { return data ? FileManager.config(file, '" + config.get("name") + "', data) : FileManager.config(file, '" + config.get("name") + "'); }); let exports = {}; " + additionalVars + " " + script + "; return exports; })();");
 			compiledScript.eval(engineContext);
 		} catch (ScriptException e) {
 			console.warn("Could not run module '" + config.get("name") + "' on startup!");
